@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "projeto-llms"
+version = "0.1.0"
+description = "Aplicação Streamlit para análise e otimização de currículos"
+authors = [
+    { name = "Ronivan", email = "ronizorzan1992@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.11"
+
+dependencies = [
+    "streamlit>=1.32",
+    "weasyprint>=61.2",
+    "pandas>=2.2",
+    "python-dotenv>=1.0",
+    "langchain>=0.1",
+    "langchain-groq>=0.1",
+    "langchain-docling>=0.1",
+    "langchain-community>=0.1",
+    "langchain-classic>=0.1",
+    "langchain-core>=0.1",
+    "docling>=0.2",
+    "uvicorn>=0.29"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]

@@ -1,0 +1,17 @@
+[theme]
+
+# Tema base
+base = "dark"  # Modo escuro
+
+# Paleta de cores
+primaryColor = "#1F77B4"           # Azul claro para destaque
+backgroundColor = "#121212"        # Fundo principal escuro
+secondaryBackgroundColor = "#1E1E1E"  # Fundo de painéis e caixas
+textColor = "#E0E0E0"   # Texto claro para contraste
+
+# Tipografia
+font = "sans serif"  # Opções: "sans serif", "serif", "monospace"
+
+
+
+
