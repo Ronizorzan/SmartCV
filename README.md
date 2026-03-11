@@ -49,19 +49,19 @@ Nesse contexto os LLMs surgem como aliados poderosos na otimização desse proce
 ```
 SmartCV/
 │
-├── 01_📃_Analisador_de_Curriculos.py               # Página principal (Streamlit)
-├── pages/                                          # Outras páginas
-│   ├── 02_🔎_Triagem_Inteligente_Portfolio.py     # Página de triagem baseada no portfólio 
-│   └── 03_🎯_Otimizador_de_Curriculos.py          # Página de Otimização de currículos
+├── 01_📃_Analisador_de_Curriculos.py                 # Página principal (Streamlit)
+├── pages/                                            # Outras páginas
+│   ├── 02_🔎_Triagem_Inteligente_Portfolio.py       # Página de triagem baseada no portfólio 
+│   └── 03_🎯_Otimizador_de_Curriculos.py            # Página de Otimização de currículos
 │
-├── core/                                    # Módulo com funções e prompts reutilizáveis
+├── core/                                            # Módulo com funções e prompts reutilizáveis
 │   ├── __init__.py
 │   ├── prompts.py                             
 │   └── utils.py
 │
 |
-|── Dockerfile                               # Arquivo para conteinerização com docker
-└── pyproject.toml                           # Arquivo de instalação das dependências
+|── Dockerfile                                      # Arquivo para conteinerização com docker
+└── pyproject.toml                                  # Arquivo de instalação das dependências
 ```
 
 ## 🎯 Resultado Esperado
@@ -86,6 +86,9 @@ SmartCV/
 ### Precisa de ajuda para entender o projeto?
 *O assistente do projeto responde a todas as suas dúvidas:*
 **👉 http://107.22.129.114:5678/webhook/4091fa09-fb9a-4039-9411-7104d213f601/chat**
+
+### 💻Live Demo da Interface
+![Interface_Streamlit](amostra_interface.gif)
 
 
 

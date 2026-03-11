@@ -383,7 +383,7 @@ def extract_and_optimize_cv(cv_docs):
             - "user": Username do GitHub ou null se não encontrado.
         Retorna None em caso de falha na extração.
     """
-    llm_extractor = load_llm(model="meta-llama/llama-4-scout-17b-16e-instruct", temperature=0.2) # Temperatura baixa para JSON mais previsível    
+    llm_extractor = load_llm(model="openai/gpt-oss-20b", temperature=0.2) # Temperatura baixa para JSON mais previsível    
     
     response_schema = [
         ResponseSchema(name="CV", description="Resumo condensado das habilidades, experiências e formação acadêmica do candidato com todas as informações relevantes do currículo."),

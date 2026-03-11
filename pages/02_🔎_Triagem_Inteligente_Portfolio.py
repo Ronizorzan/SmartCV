@@ -33,9 +33,14 @@ with st.sidebar:
     if "uploader_key" not in st.session_state:
         st.session_state["uploader_key"] = str(uuid.uuid4())
     
+    if "selected_cv" not in st.session_state:
+        st.session_state["selected_cv"] = None
+    
     with st.expander("📤 Carregar Currículo (PDF)", expanded=True):
         uploaded_file = st.file_uploader("📤 Escolha um currículo (em PDF)", 
                             type=[".pdf"], key=st.session_state["uploader_key"], help="Você pode carregar apenas um documento")
+        
+    st.session_state["selected_cv"] = uploaded_file
 
     with st.expander("📱 Contato", expanded=False):
         st.markdown(markdown, unsafe_allow_html=True)

@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libcairo2 \
     libgdk-pixbuf-2.0-0 \
     libffi-dev \
+    libglib2.0-0 \    
     && rm -rf /var/lib/apt/lists/*    
 
 WORKDIR /app

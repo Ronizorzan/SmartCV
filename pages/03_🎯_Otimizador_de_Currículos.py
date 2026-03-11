@@ -29,6 +29,8 @@ with st.sidebar:
         uploaded_file = st.file_uploader("📤 Escolha arquivos de currículo (PDF)", help="Você pode carregar apenas um documento",
                                       accept_multiple_files=False, type=[".pdf"], key=st.session_state["uploader_key"])
     
+    st.session_state["selected_cv"] = uploaded_file
+    
     with st.expander("📱 Contato", expanded=False):
         st.markdown(markdown, unsafe_allow_html=True)
         #st.markdown("<h1 style='border: 1px solid #1f77b4; padding: 20px; text-align: center; color: #1f77b4;'>Contato</h1>", unsafe_allow_html=True)
@@ -62,7 +64,7 @@ if uploaded_file:
     
     if process_cv:
         with output_col:            #   Modelos alternativos ---   llama-3.3-70b-versatile, openai/gpt-oss-120B, openai/gpt-oss-safeguard-20b
-            llm = load_llm(model="openai/gpt-oss-20b", temperature=0.6) # Carrega o modelo LLM
+            llm = load_llm(model="llama-3.3-70b-versatile", temperature=0.6) # Carrega o modelo LLM
 
             with st.status("⌛ Otimizando currículo... Aguarde um instante", expanded=True)  as status:
                 path = Path(uploaded_file.name)
