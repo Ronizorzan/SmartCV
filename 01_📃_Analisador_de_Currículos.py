@@ -52,7 +52,7 @@ if uploaded_files:
     
         manual_desc = st.toggle("Deseja inserir descrição personalizada da vaga?", value=False)
         if manual_desc:
-            description = st.text_area("Insira a descrição de uma Vaga específica (opcional):", height=300, width=700,
+            description = st.text_area("Insira a descrição de uma Vaga específica:", height=300, width=700,
                                        placeholder="Copie e cole a descrição da vaga aqui, ou insira manualmente...")
         else:
             description = None

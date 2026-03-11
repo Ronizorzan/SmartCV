@@ -22,7 +22,8 @@ dependencies = [
     "langchain-community>=0.1",
     "langchain-classic>=0.1",
     "langchain-core>=0.1",    
-    "uvicorn>=0.29"
+    "uvicorn>=0.29",
+    "pymupdf==1.27.1"
 ]
 
 [tool.setuptools.packages.find]

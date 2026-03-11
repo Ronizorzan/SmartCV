@@ -451,6 +451,7 @@ def analyze_with_github(condensed_json, github_docs, role, level):
    Considere os conhecimentos que você tem sobre os requisitos tipicamente exigidos para o cargo ao realizar a análise.
    Analise os dados extraídos do currículo e os repositórios do GitHub fornecidos e retorne a resposta para ser exibida em markdown.
    Quando aplicável, utilize emojis informativos que dirija o olhar do usuário para as informações mais importantes rapidamente.
+   Quando renderizar tabelas mantenha-as informativas, relevantes e sem lacunas nos campos.
             
     - Identifique habilidades declaradas e habilidades demonstradas.
     - Avalie a relevância dos projetos do GitHub para a vaga.

@@ -48,23 +48,23 @@ if uploaded_file:
         st.markdown("<h2 style='text-align: center'>⚙️ Configurações da Análise</h2>", unsafe_allow_html=True)
         manual_desc = st.toggle("Deseja inserir descrição personalizada da vaga?", value=False)
         if manual_desc:
-            description = st.text_area("Insira a descrição de uma vaga específica (opcional):", height=250, width=700,
+            description = st.text_area("Insira a descrição de uma vaga específica:", height=250, width=700,
                                        placeholder="Copie e cole a descrição da vaga aqui, ou insira manualmente...")                                    
         else:        
             description = None
     
         if description is None:
-            role = st.selectbox("Cargo alvo da análise:",
+            role = st.selectbox("Cargo alvo da otimização:",
                             options=["Cientista de Dados", "Engenheiro de Dados",
                                      "Analista de Dados", "Desenvolvedor Full Stack"])
         else:
             role = None                                    
 
-        process_cv = st.button("Analisar Currículos", use_container_width=True, type="primary")
+        process_cv = st.button("🚀 Otimizar Currículos", use_container_width=True, type="primary")
     
     if process_cv:
         with output_col:            #   Modelos alternativos ---   llama-3.3-70b-versatile, openai/gpt-oss-120B, openai/gpt-oss-safeguard-20b
-            llm = load_llm(model="llama-3.3-70b-versatile", temperature=0.6) # Carrega o modelo LLM
+            llm = load_llm(model="openai/gpt-oss-20B", temperature=0.6) # Carrega o modelo LLM
 
             with st.status("⌛ Otimizando currículo... Aguarde um instante", expanded=True)  as status:
                 path = Path(uploaded_file.name)
