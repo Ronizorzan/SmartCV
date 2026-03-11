@@ -9,29 +9,29 @@ Nesse contexto os LLMs surgem como aliados poderosos na otimização desse proce
 - **Candidatos:** profissionais qualificados são desclassificados por não conseguirem estruturar seus currículos de forma adequada às exigências específicas da vaga
 
 
-# ⚙️ A Ferramenta
+## ⚙️ Funcionalidades da Ferramenta
 
 *Este projeto utiliza Large Language Models (LLMs) para transformar o processo seletivo em três etapas principais:*
 
-## 📃 Analisador de Currículos
+### 📃 Analisador de Currículos
 - 	Upload de múltiplos PDFs.
 - 	Extração de habilidades, formação, experiências e perguntas de entrevista.
 - 	Geração de feedback personalizado e score de compatibilidade com a vaga.
 
-## 🔎 Triagem Inteligente de Portfólio
+### 🔎 Triagem Inteligente de Portfólio
 -   Varredura dos projetos mais recentes do candidato através da API do GitHub.
 - 	Análise automática de portfólios públicos (quando disponíveis).
 - 	Cruzamento de informações entre currículo e projetos reais.
 - 	Produção de scores mais confiáveis e identificação de talentos com maior potencial.
 
 
-## 🎯 Otimizador de Currículos
+### 🎯 Otimizador de Currículos
 - 	Identificação de lacunas nos currículos e sugestões de melhoria.
 - 	Geração automática de um currículo otimizado em PDF, adaptado ao ATS.
 - 	Feedback detalhado com dicas de cursos, pontos de destaque e possíveis perguntas de entrevista.
 
 
-# 👥 Impacto
+## 👥 Impacto
 
 *Para o RH*
 - 	Redução de horas de trabalho manual.
@@ -44,7 +44,7 @@ Nesse contexto os LLMs surgem como aliados poderosos na otimização desse proce
 - 	Feedback personalizado que aumenta as chances de sucesso.
 
 
-# 📂 Estrutura do Projeto
+## 📂 Estrutura do Projeto
 
 ```
 SmartCV/
@@ -64,14 +64,14 @@ SmartCV/
 └── pyproject.toml                           # Arquivo de instalação das dependências
 ```
 
-# 🎯 Resultado Esperado
+## 🎯 Resultado Esperado
 
 *Uma solução personalizada que atende* **RH e candidatos**
-• 	**Para empresas:** suporte inteligente na triagem e seleção, reduzindo drasticamente tempo e esforço gastos e aumentando significativamente as chances de sucesso nas contratações.
-• 	**Para candidatos:** currículos otimizados, feedback claro e maior chance de destaque sem inventar ou distorcer informações, destacando de forma justa, clara e concisa as habilidades reais do candidato.
+- 	**Para empresas:** suporte inteligente na triagem e seleção, reduzindo drasticamente tempo e esforço gastos e aumentando significativamente as chances de sucesso nas contratações.
+- 	**Para candidatos:** currículos otimizados, feedback claro e maior chance de destaque sem inventar ou distorcer informações, destacando de forma justa, clara e concisa as habilidades reais do candidato.
 
 
-# ✨ Principais diferenciais:
+## ✨ Principais diferenciais:
 
 - 	📃 Analisador de Currículos: extrai habilidades, experiências mais relevantes e gera feedback com score de compatibilidade.
 - 	🔎 Triagem Inteligente de Portfólio: cruza informações do currículo com projetos reais, potencializando a confiabilidade das análises.
@@ -81,9 +81,9 @@ SmartCV/
 > **🚀 Missão:** transformar currículos em narrativas poderosas e justas, conectando oportunidades a quem realmente tem potencial.
 
 
-# 🤖 Suporte N8N
-### Precisa de ajuda para entender o projeto?
+## 🤖 Suporte N8N
 
+### Precisa de ajuda para entender o projeto?
 *O assistente do projeto responde a todas as suas dúvidas:*
 **👉 http://107.22.129.114:5678/webhook/4091fa09-fb9a-4039-9411-7104d213f601/chat**
 

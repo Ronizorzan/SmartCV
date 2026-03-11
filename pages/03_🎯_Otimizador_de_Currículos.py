@@ -17,7 +17,7 @@ with open("style.css") as file:
 
 # Configuração da Barra Lateral
 with st.sidebar:
-    st.image("https://th.bing.com/th/id/OIG1.quX1n6HvUE5Yvs3RYKCv?w=270&h=270&c=6&r=0&o=5&pid=ImgGn", width=175)
+    st.image("https://th.bing.com/th/id/OIG1.quX1n6HvUE5Yvs3RYKCv?w=270&h=270&c=6&r=0&o=5&pid=ImgGn", width=200)
     
     if "uploader_key" not in st.session_state:
         st.session_state["uploader_key"] = str(uuid.uuid4())
@@ -61,8 +61,8 @@ if uploaded_file:
         process_cv = st.button("Analisar Currículos", use_container_width=True, type="primary")
     
     if process_cv:
-        with output_col:            #      llama-3.3-70b-versatile, openai/gpt-oss-120B, openai/gpt-oss-safeguard-20b
-            llm = load_llm(model="openai/gpt-oss-safeguard-20b", temperature=0.6) # Carrega o modelo LLM
+        with output_col:            #   Modelos alternativos ---   llama-3.3-70b-versatile, openai/gpt-oss-120B, openai/gpt-oss-safeguard-20b
+            llm = load_llm(model="openai/gpt-oss-20b", temperature=0.6) # Carrega o modelo LLM
 
             with st.status("⌛ Otimizando currículo... Aguarde um instante", expanded=True)  as status:
                 path = Path(uploaded_file.name)

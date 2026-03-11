@@ -11,27 +11,96 @@ import streamlit as st
 import os
 
 
+# Loads the model from Groq API
+@st.cache_resource
 def load_llm(model, temperature=0.5, max_tokens=None, max_retries=3, timeout=None, verbose=False):
+    """
+    Carrega um modelo LLM da API Groq com cache para otimizar chamadas.
+
+    Parameters
+    ----------
+    model : str
+        Nome ou identificador do modelo a ser carregado.
+    temperature : float, optional
+        Grau de aleatoriedade nas respostas (default=0.5).
+    max_tokens : int, optional
+        Número máximo de tokens na resposta.
+    max_retries : int, optional
+        Número máximo de tentativas em caso de falha.
+    timeout : int, optional
+        Tempo limite para requisição.
+    verbose : bool, optional
+        Define se logs detalhados devem ser exibidos.
+
+    Returns
+    -------
+    ChatGroq
+        Instância do modelo carregado.
+    """
     llm = ChatGroq(model=model, temperature=temperature, max_tokens=max_tokens,
                    max_retries=max_retries, timeout=timeout, verbose=verbose)
     return llm
 
 
+# Loads the content from PDFs
 def parse_documents(file_path):
+    """
+    Carrega documentos PDF usando PyMuPDFLoader.
+
+    Parameters
+    ----------
+    file_path : str
+        Caminho do arquivo PDF.
+
+    Returns
+    -------
+    list of Document
+        Lista de documentos extraídos do PDF.
+    """
     loader = PyMuPDFLoader(str(file_path)) # Garante que seja string
     docs = loader.load()
     return docs
 
 
+# Creates the prompt template
 def create_prompt_template(template: str) -> ChatPromptTemplate:
+    """
+    Cria um template de prompt para interação com LLM.
+
+    Parameters
+    ----------
+    template : str
+        Texto base do prompt.
+
+    Returns
+    -------
+    ChatPromptTemplate
+        Template configurado para uso em modelos de linguagem.
+    """
     prompt_template = ChatPromptTemplate.from_template(template)
     return prompt_template
 
+# Extracts the reponse from a structured Json
 def get_response_text(response, required_fields: list) -> dict:
+    """
+    Extrai e valida informações em formato JSON da resposta do modelo.
+
+    Parameters
+    ----------
+    response : object
+        Objeto de resposta do modelo contendo o atributo `content`.
+    required_fields : list
+        Lista de campos obrigatórios a serem garantidos no JSON.
+
+    Returns
+    -------
+    dict
+        Dicionário com os campos extraídos e validados.
+    """
     try:
         res = response.content
         if "<think>" in res:
-            res = res.split("</think>")[-1].strip() # Corrigido para fechar a tag
+            res = res.split("</think>")[-1].strip() 
 
         start_index = res.find("{")
         final_index = res.rfind("}") + 1    
@@ -50,8 +119,21 @@ def get_response_text(response, required_fields: list) -> dict:
         print("Erro ao decodificar JSON:", e)
         return {field: "Erro na extração" for field in required_fields}
 
-# CORRIGIDO: Agora formata corretamente múltiplos currículos
+# Creates a CSV file with several results
 def process_results_to_df(dict_responses: dict) -> pd.DataFrame:
+    """
+    Converte respostas extraídas em um DataFrame estruturado.
+
+    Parameters
+    ----------
+    dict_responses : dict
+        Dicionário com nome do arquivo como chave e dados extraídos como valor.
+
+    Returns
+    -------
+    pandas.DataFrame
+        DataFrame formatado com os resultados.
+    """
     formatted_data = []
     for filename, data in dict_responses.items():
         row = {"Arquivo": filename}
@@ -60,7 +142,25 @@ def process_results_to_df(dict_responses: dict) -> pd.DataFrame:
     return pd.DataFrame(formatted_data)
 
 
+# Generates a PDF document with weasyprint
 def save_to_pdf(df, mode, file_path="curriculo.pdf"):
+    """
+    Gera um PDF formatado a partir de dados estruturados.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame or dict
+        Dados a serem convertidos em PDF. Pode ser DataFrame (modo RH) ou dict (modo CV).
+    mode : str
+        Define o tipo de relatório: "RH" para triagem executiva ou "CV" para currículo.
+    file_path : str, optional
+        Caminho de saída do arquivo PDF (default="curriculo.pdf").
+
+    Returns
+    -------
+    bytes
+        Conteúdo binário do PDF gerado, útil para download em Streamlit.
+    """
     if mode == "RH":
         # Placeholder - URL da logo personalizada da empresa 
         logo_url = "https://www.bing.com/th/id/OIG4.CkhC9D4TeOfL0IT2UmTg?w=540&h=540&c=6&r=0&o=5&pid=ImgGn"
@@ -212,6 +312,22 @@ def save_to_pdf(df, mode, file_path="curriculo.pdf"):
 # Fetch data from public repositories on GitHub
 @st.cache_data(show_spinner=False)
 def fetch_github_repos(username, max_repos=10, sort="updated", direction="desc"):
+    """
+    Busca repositórios públicos de um usuário no GitHub.
+
+    Args:
+        username (str): Nome de usuário do GitHub.
+        max_repos (int, opcional): Número máximo de repositórios a retornar. 
+            Padrão é 10.
+        sort (str, opcional): Critério de ordenação dos repositórios 
+            (ex.: "updated", "created"). Padrão é "updated".
+        direction (str, opcional): Direção da ordenação ("asc" ou "desc"). 
+            Padrão é "desc".
+
+    Returns:
+        list[Document]: Lista de objetos Document contendo informações 
+        resumidas dos repositórios e conteúdo do README (limitado a 5000 caracteres).
+    """
     url = f"https://api.github.com/users/{username}/repos?sort={sort}&direction={direction}"
     response = requests.get(url)
     if response.status_code != 200:
@@ -232,22 +348,45 @@ def fetch_github_repos(username, max_repos=10, sort="updated", direction="desc")
         readme_content = readme_resp.text if readme_resp.status_code == 200 else "README não disponível."
         
         content = repo_info + "\n\nREADME:\n" + readme_content
-        docs.append(Document(page_content=content[:1000], metadata={"source": repo['html_url']}))
+        docs.append(Document(page_content=content[:5000], metadata={"source": repo['html_url']}))
     return docs
 
     
 def build_candidate_context(cv_summary, github_docs):
-    """Combina o resumo do CV com os dados do GitHub."""
+    """
+    Combina o resumo do currículo com os documentos extraídos do GitHub.
+
+    Args:
+        cv_summary (str): Texto contendo o resumo do currículo do candidato.
+        github_docs (list[Document]): Lista de documentos com dados dos 
+            repositórios do GitHub.
+
+    Returns:
+        str: Texto concatenado com o resumo do currículo e os dados do GitHub,
+        separado por delimitadores.
+    """    
     cv_doc = Document(page_content=f"RESUMO DO CURRÍCULO:\n{cv_summary}", metadata={"source": "CV"})
     all_docs = [cv_doc] + github_docs
     return "\n\n---\n\n".join([doc.page_content for doc in all_docs])
 
 
 def extract_and_optimize_cv(cv_docs):
-    llm_extractor = load_llm(model="llama-3.3-70b-versatile", temperature=0.1) # Temperatura baixa para JSON mais previsível    
+    """
+    Extrai e otimiza informações de currículos utilizando um modelo de linguagem.
+
+    Args:
+        cv_docs (list[Document]): Lista de documentos contendo o conteúdo do currículo.
+
+    Returns:
+        dict | None: Dicionário estruturado com:
+            - "CV": Resumo condensado das habilidades, experiências e formação.
+            - "user": Username do GitHub ou null se não encontrado.
+        Retorna None em caso de falha na extração.
+    """
+    llm_extractor = load_llm(model="meta-llama/llama-4-scout-17b-16e-instruct", temperature=0.2) # Temperatura baixa para JSON mais previsível    
     
     response_schema = [
-        ResponseSchema(name="CV", description="Resumo condensado das habilidades, experiências e formação acadêmica do candidato."),
+        ResponseSchema(name="CV", description="Resumo condensado das habilidades, experiências e formação acadêmica do candidato com todas as informações relevantes do currículo."),
         ResponseSchema(name="user", description="Apenas o username do GitHub (ex: 'torvalds'). Se não encontrar nenhuma URL do GitHub, retorne exatamente null.")
     ]
 
@@ -258,7 +397,7 @@ def extract_and_optimize_cv(cv_docs):
     prompt = ChatPromptTemplate.from_template(
         """Você é um assistente de extração de dados técnicos de currículos.
          Leia o currículo abaixo e extraia as informações com precisão e ALTO NÍVEL DE DETALHAMENTO para uma análise posterior mais aprofundada.
-         Extraia TODAS as informações do currículo para um cruzamento de informações
+         Extraia TODAS AS INFORMAÇÕES do currículo para um cruzamento de informações
          baseado nos dados do currículo e portfólio do candidato.
         {format_instructions}
 
@@ -285,21 +424,39 @@ def extract_and_optimize_cv(cv_docs):
 
     
 
-def analyze_with_github(condensed_json, github_docs, role):
-    llm_analyzer = load_llm(model="openai/gpt-oss-20b", temperature=0.3)
+def analyze_with_github(condensed_json, github_docs, role, level):
+    """
+    Analisa o perfil do candidato com base no currículo e nos repositórios do GitHub.
+
+    Args:
+        condensed_json (dict): Dados extraídos e otimizados do currículo.
+        github_docs (list[Document]): Lista de documentos com informações dos 
+            repositórios do GitHub.
+        role (str): Cargo alvo da análise (ex.: "Desenvolvedor Backend").
+        level (str): Nível da vaga (ex.: "Júnior", "Sênior").
+
+    Returns:
+        str: Texto em formato Markdown contendo:
+            - Habilidades declaradas e demonstradas.
+            - Avaliação da relevância dos projetos do GitHub.
+            - Dois scores (currículo e GitHub).
+            - Resumo executivo com pontos fortes e áreas de desenvolvimento.
+    """
+    llm_analyzer = load_llm(model="openai/gpt-oss-120b", temperature=0.3)
     
     candidate_context = build_candidate_context(condensed_json.get("CV", ""), github_docs)
     
     prompt = create_prompt_template("""
-   Você é um avaliador de candidatos para a vaga de {role}.
-   Analise os dados extraídos do currículo e os repositórios do GitHub fornecidos.
-        
-    - **Gere dois scores:**
-        1. Score baseado no currículo.
-        2. Score baseado em evidências práticas do GitHub (README, tecnologias, relevância, resultados).
+   Você é um avaliador de candidatos para a vaga de {role} nível {level} com foco em identificar talentos em potencial para a empresa.
+   Considere os conhecimentos que você tem sobre os requisitos tipicamente exigidos para o cargo ao realizar a análise.
+   Analise os dados extraídos do currículo e os repositórios do GitHub fornecidos e retorne a resposta para ser exibida em markdown.
+   Quando aplicável, utilize emojis informativos que dirija o olhar do usuário para as informações mais importantes rapidamente.
+            
     - Identifique habilidades declaradas e habilidades demonstradas.
     - Avalie a relevância dos projetos do GitHub para a vaga.
-    - Quando aplicável, utilize emojis informativos que dirija o olhar do usuário para as informações mais importantes rapidamente.
+    - **Gere dois scores:**
+        1. Score baseado no currículo.
+        2. Score baseado em evidências práticas do GitHub (README, tecnologias, relevância, resultados).    
     - Produza um resumo executivo com pontos fortes e áreas de desenvolvimento.
 
     Contexto do candidato:
@@ -307,7 +464,7 @@ def analyze_with_github(condensed_json, github_docs, role):
     """)
     
     response = llm_analyzer.invoke(
-        prompt.format_messages(role=role, candidate_context=candidate_context)
+        prompt.format_messages(role=role, candidate_context=candidate_context, level=level)
     )
     return response.content
 
