@@ -85,7 +85,7 @@ SmartCV/
 
 ### Precisa de ajuda para entender o projeto?
 *O assistente do projeto responde a todas as suas dúvidas:*
-**👉 http://107.22.129.114:5678/webhook/4091fa09-fb9a-4039-9411-7104d213f601/chat**
+**👉 http://100.54.239.46:5678/webhook/4091fa09-fb9a-4039-9411-7104d213f601/chat**
 
 ### 💻Live Demo da Interface
 ![Interface_Streamlit](amostra_interface.gif)

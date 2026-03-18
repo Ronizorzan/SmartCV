@@ -487,7 +487,7 @@ markdown = """<div class="footer">
 
 assistant_markdown = """<div class="assistant-container">
     <p class="assistant-label">Assistente do Projeto</p>
-    <a href="http://107.22.129.114:5678/webhook/4091fa09-fb9a-4039-9411-7104d213f601/chat">
+    <a href="http://100.54.239.46:5678/webhook/4091fa09-fb9a-4039-9411-7104d213f601/chat">
         <div class="assistant-icon">
             <img src="https://cdn-icons-gif.flaticon.com/17576/17576937.gif" alt="Assistente n8n">
         </div>
