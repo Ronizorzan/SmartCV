@@ -348,7 +348,7 @@ def fetch_github_repos(username, max_repos=10, sort="updated", direction="desc")
         readme_content = readme_resp.text if readme_resp.status_code == 200 else "README não disponível."
         
         content = repo_info + "\n\nREADME:\n" + readme_content
-        docs.append(Document(page_content=content[:5000], metadata={"source": repo['html_url']}))
+        docs.append(Document(page_content=content[:4500], metadata={"source": repo['html_url']}))
     return docs
 
     
