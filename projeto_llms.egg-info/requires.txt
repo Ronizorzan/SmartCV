@@ -1,0 +1,12 @@
+streamlit>=1.32
+weasyprint>=61.2
+pandas>=2.2
+python-dotenv>=1.0
+langchain>=0.1
+langchain-groq>=0.1
+langchain-community>=0.1
+langchain-classic>=0.1
+langchain-core>=0.1
+langchain-google-genai>=4.0.0
+uvicorn>=0.29
+pymupdf==1.27.1

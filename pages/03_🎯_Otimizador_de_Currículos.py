@@ -13,7 +13,7 @@ from core.utils import *
 st.set_page_config(page_title="Otimizador de Currículos", layout="wide")
 
 with open("style.css") as file:
-    st.html(f"<style>{file.read()}</style>", unsafe_allow_javascript=True)
+    st.markdown(f"<style>{file.read()}</style>", unsafe_allow_html=True)
 
 # Configuração da Barra Lateral
 with st.sidebar:

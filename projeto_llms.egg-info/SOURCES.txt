@@ -1,0 +1,12 @@
+README.md
+pyproject.toml
+core/__init__.py
+core/prompts.py
+core/utils.py
+pages/02_🔎_Triagem_Inteligente_Portfolio.py
+pages/03_🎯_Otimizador_de_Currículos.py
+projeto_llms.egg-info/PKG-INFO
+projeto_llms.egg-info/SOURCES.txt
+projeto_llms.egg-info/dependency_links.txt
+projeto_llms.egg-info/requires.txt
+projeto_llms.egg-info/top_level.txt

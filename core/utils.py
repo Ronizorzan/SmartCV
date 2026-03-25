@@ -7,6 +7,7 @@ from langchain_classic.prompts import ChatPromptTemplate
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_core.documents import Document
 from langchain_classic.output_parsers import ResponseSchema, StructuredOutputParser
+from langchain_google_genai import GoogleGenerativeAI
 import streamlit as st
 import os
 
@@ -39,6 +40,13 @@ def load_llm(model, temperature=0.5, max_tokens=None, max_retries=3, timeout=Non
     """
     llm = ChatGroq(model=model, temperature=temperature, max_tokens=max_tokens,
                    max_retries=max_retries, timeout=timeout, verbose=verbose)
+    return llm
+
+@st.cache_resource
+def load_google_llm():
+    """ Carrega um modelo LLM da API do Google com cache para otimizar chamadas."""
+    llm = GoogleGenerativeAI(model="gemini-2.5-flash",
+     temperature=0.4, api_key=os.getenv("GEMINI_API_KEY"))
     return llm
 
 
@@ -311,7 +319,7 @@ def save_to_pdf(df, mode, file_path="curriculo.pdf"):
 
 # Fetch data from public repositories on GitHub
 @st.cache_data(show_spinner=False)
-def fetch_github_repos(username, max_repos=10, sort="updated", direction="desc"):
+def fetch_github_repos(username, max_repos=8, sort="updated", direction="desc"):
     """
     Busca repositórios públicos de um usuário no GitHub.
 
@@ -348,7 +356,7 @@ def fetch_github_repos(username, max_repos=10, sort="updated", direction="desc")
         readme_content = readme_resp.text if readme_resp.status_code == 200 else "README não disponível."
         
         content = repo_info + "\n\nREADME:\n" + readme_content
-        docs.append(Document(page_content=content[:4500], metadata={"source": repo['html_url']}))
+        docs.append(Document(page_content=content[:5000], metadata={"source": repo['html_url']}))
     return docs
 
     
@@ -442,22 +450,25 @@ def analyze_with_github(condensed_json, github_docs, role, level):
             - Dois scores (currículo e GitHub).
             - Resumo executivo com pontos fortes e áreas de desenvolvimento.
     """
-    llm_analyzer = load_llm(model="openai/gpt-oss-120b", temperature=0.3)
+    #llm_analyzer = load_google_llm()
+    llm_analyzer = load_llm(model="openai/gpt-oss-120b", temperature=0.5)
     
     candidate_context = build_candidate_context(condensed_json.get("CV", ""), github_docs)
     
     prompt = create_prompt_template("""
-   Você é um avaliador de candidatos para a vaga de {role} nível {level} com foco em identificar talentos em potencial para a empresa.
-   Considere os conhecimentos que você tem sobre os requisitos tipicamente exigidos para o cargo ao realizar a análise.
-   Analise os dados extraídos do currículo e os repositórios do GitHub fornecidos e retorne a resposta para ser exibida em markdown.
+   Você é um avaliador sênior de candidatos para a vaga de {role} nível {level} com foco em identificar talentos em potencial para a empresa.
+   Considere os conhecimentos que você tem sobre os requisitos tipicamente exigidos para embasar a análise.
+   Analise os dados extraídos do currículo e os repositórios do GitHub fornecidos e retorne a resposta para ser exibida em Markdown.
    Quando aplicável, utilize emojis informativos que dirija o olhar do usuário para as informações mais importantes rapidamente.
-   Quando renderizar tabelas mantenha-as informativas, relevantes e sem lacunas nos campos.
+   Dê preferência para tabelas ao fazer comparações, mas mantenha-as bem formatadas, informativas e sem lacunas nos campos, 
+   sempre utilizando emojis informativos para guiar o olhar do leitor para os pontos importantes.   
             
     - Identifique habilidades declaradas e habilidades demonstradas.
     - Avalie a relevância dos projetos do GitHub para a vaga.
     - **Gere dois scores:**
         1. Score baseado no currículo.
-        2. Score baseado em evidências práticas do GitHub (README, tecnologias, relevância, resultados).    
+        2. Score baseado em evidências práticas do GitHub (README, 
+        tecnologias, relevância, resultados).    
     - Produza um resumo executivo com pontos fortes e áreas de desenvolvimento.
 
     Contexto do candidato:
@@ -467,7 +478,7 @@ def analyze_with_github(condensed_json, github_docs, role, level):
     response = llm_analyzer.invoke(
         prompt.format_messages(role=role, candidate_context=candidate_context, level=level)
     )
-    return response.content
+    return response.content if hasattr(response, "content") else response
 
 
 markdown = """<div class="footer">
